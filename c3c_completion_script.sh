@@ -1,3 +1,11 @@
+_complete_option_flag() {
+	already_typed="$1"
+	options="$2"
+	value="${already_typed##*=}"
+	flag="${already_typed%%=*}="
+	mapfile -t COMPREPLY < <(compgen -P "${flag}" -W "${options}" -- "${value}")
+}
+
 _c3c() {
 	commands=(
 		"compile"
@@ -155,118 +163,74 @@ _c3c() {
 			;;
 	esac
 
+	# Remove '=' from word-breaks so we can do some magic
+	COMP_WORDBREAKS="${COMP_WORDBREAKS//=/}"
+
+	# Prevent inserting a space after completing '--<flag>=', so that we can
+	# double tab again to see the possible values for the flag
 	if [[ "${#COMPREPLY[@]}" -eq 1 && "${COMPREPLY[0]}" == *= ]]; then
 		compopt -o nospace
 	fi
 
-	# This big switch-statement does the same for every --<flag>= :
-	# 1) get the already typed part after the '='
-	# 2) match that with the available opts
-	# 3) prepend the flag again before the matches (otherwise the flag will be
-	# 	removed from the typed command)
-	#
-	# I thought about abstracting this away in some sense, but havent't found
-	# a satisfying solution yet.
+	# Big switch statement to catch all available flags and fill the opts
+	# array with their possible values
+	local opts=()
 	case "${cur}" in
 		--validation=*)
-			value="${cur##*=}"
 			opts=( "lenient" "strict" "obnoxious" )
-			mapfile -t COMPREPLY < <(compgen -P "--validation=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--trust=*)
-			value="${cur##*=}"
 			opts=( "none" "include" "full" )
-			mapfile -t COMPREPLY < <(compgen -P "--trust=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--optlevel=*)
-			value="${cur##*=}"
 			opts=( "none" "less" "more" "max" )
-			mapfile -t COMPREPLY < <(compgen -P "--optlevel=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--optsize=*)
-			value="${cur##*=}"
 			opts=( "none" "small" "tiny" )
-			mapfile -t COMPREPLY < <(compgen -P "--optsize=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--linker=*)
-			value="${cur##*=}"
 			opts=( "builtin" "cc" "custom" )
-			mapfile -t COMPREPLY < <(compgen -P "--linker=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--reloc=*)
-			value="${cur##*=}"
 			opts=( "none" "pic" "PIC" "pie" "PIE" )
-			mapfile -t COMPREPLY < <(compgen -P "--reloc=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--x86cpu=*)
-			value="${cur##*=}"
 			opts=( "baseline" "ssse6" "sse4" "avx1" "avx2-v1" "avx2-v2" "avx512" "native" )
-			mapfile -t COMPREPLY < <(compgen -P "--x86cpu=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--x86vec=*)
-			value="${cur##*=}"
 			opts=( "none" "mmx" "sse" "avx" "avx512" "default"  )
-			mapfile -t COMPREPLY < <(compgen -P "--x86vec=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--riscvfloat=*)
-			value="${cur##*=}"
 			opts=( "none" "float" "double" )
-			mapfile -t COMPREPLY < <(compgen -P "--riscvfloat=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--memory-env=*)
-			value="${cur##*=}"
 			opts=( "normal" "small" "tiny" "none" )
-			mapfile -t COMPREPLY < <(compgen -P "--memory-env=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--fp-math=*)
-			value="${cur##*=}"
 			opts=( "strict" "relaxed" "fast" )
-			mapfile -t COMPREPLY < <(compgen -P "--fp-math=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--win64-simd=*)
-			value="${cur##*=}"
 			opts=( "array" "full" )
-			mapfile -t COMPREPLY < <(compgen -P "--win64-simd=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--wincrt=*)
-			value="${cur##*=}"
 			opts=( "none" "static-debug" "static" "dynamic-debug" "dynamic" )
-			mapfile -t COMPREPLY < <(compgen -P "--wincrt=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--vector-conv=*)
-			value="${cur##*=}"
 			opts=( "default" "old" )
-			mapfile -t COMPREPLY < <(compgen -P "--vector-conv=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		--sanitize=*)
-			value="${cur##*=}"
 			opts=( "address" "memory" "thread" )
-			mapfile -t COMPREPLY < <(compgen -P "--sanitize=" -W "${opts[*]}" -- "${value}")
-			return
 			;;
 		# Yes or no flags
-		--safe=*|--panic-msg=*|--single-module=*|--show-bactrace=*|--old-test-bench=* \
-		|--use-stdlib=*|--link-libc=*|--emit-stdlib=*|--strip-unused=*)
-			flag="${cur%%=*}="
-			value="${cur##*=}"
-			mapfile -t COMPREPLY < <(compgen -P "${flag}" -W "yes no" -- "${value}")
-			return
+		--safe=*|--panic-msg=*|--single-module=*|--show-bactrace=*|  \
+			--old-test-bench=*|--use-stdlib=*|--link-libc=*|--emit-stdlib=*| \
+			--strip-unused=*)
+			opts=( "yes" "no" )
 			;;
 	esac
+	if (( "${#opts[*]}" >= 1)); then
+		_complete_option_flag "${cur}" "${opts[*]}"
+	fi
 }
 
 complete -o default -F _c3c c3c
