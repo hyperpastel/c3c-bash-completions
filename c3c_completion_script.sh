@@ -149,12 +149,14 @@ _c3c() {
 				mapfile -t COMPREPLY < <(compgen -W "${options[*]}" -- "${cur}")
 			fi
 			;;
-		clean)
-			COMPREPLY=()	# This one does not need extra info
-			;;
 		project)
 			mapfile -t COMPREPLY < <(compgen -W "view add-target fetch" -- "${cur}")
 			return
+			;;
+		--template) # TODO: this only possible after `init`
+			mapfile -t COMPREPLY < <(compgen -W "exe static-lib dynamic-lib" -- "${cur}")
+			mapfile -t _DEFAULTS < <(compgen -o default -- "${cur}")
+			COMPREPLY+=("${_DEFAULTS[*]}")
 			;;
 		*)
 			if [[ "${cur}" == -* ]]; then
