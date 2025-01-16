@@ -158,6 +158,16 @@ _c3c() {
 			mapfile -t _DEFAULTS < <(compgen -o default -- "${cur}")
 			COMPREPLY+=("${_DEFAULTS[*]}")
 			;;
+		--target)
+			available_targets=$( \
+				c3c --list-targets \
+				| tail -n +2 \
+				| sed "s/^ *\([^ ]*\) *$/\1/" \
+				| tr '\n' ' ' \
+			)
+			mapfile -t COMPREPLY < <(compgen -W "${available_targets}" -- "${cur}")
+			return
+			;;
 		*)
 			if [[ "${cur}" == -* ]]; then
 				mapfile -t COMPREPLY < <(compgen -W "${options[*]}" -- "${cur}")
