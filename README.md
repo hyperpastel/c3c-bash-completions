@@ -9,14 +9,20 @@ source $HOME/completion-scripts/c3c-bash-completions/c3c_completion_script.sh
 
 Completions are provided for all the subcommands like `compile`, `run` or `clean`,
 and for the many flags.
-When double tapping after `$ c3c `, only the subcommands will show up to not
+When double tapping tab after `$ c3c `, only the subcommands will show up to not
 completely fill the screen, but pressing double tap after `$ c3c -` will
 give you all the flags.
 
 Flags which take in an argument after a `=` will show up their available values
 after having written out (or completed) the flag up till `=`
-(without space behind) and double tapping tab.
+(without space behind) and double "tabbing".
 
+Currently commands like `build` which take in a target (from project.json) have
+smart target-completion using `c3c project view --targets`.
+This is a flag introduced in commit [c326c525be92f89ad437cf6afb03661fb6537b17](https://github.com/c3lang/c3c/commit/c326c525be92f89ad437cf6afb03661fb6537b17).
+It will be in release 0.6.7, or is now available in `latest`.
 
-My dream is now to further smartify this, so that for example the `build`
-subcommand completion knows which targets there are.
+> [!important] `c3c project view`
+> This currently only works when inside the root-directory of your C3 project.
+> There is a PR to fix it so it also works in child-directories, which will
+> probably be included in 0.6.7.
