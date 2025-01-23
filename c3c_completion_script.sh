@@ -6,6 +6,12 @@ _complete_option_flag() {
 	mapfile -t COMPREPLY < <(compgen -P "${flag}" -W "${options}" -- "${value}")
 }
 
+_complete_options() {
+	already_typed="$1"
+	options="$2"
+	mapfile -t COMPREPLY < <(compgen -W "${options}" -- "${already_typed}")
+}
+
 _c3c() {
 	commands=(
 		"compile"
@@ -144,19 +150,28 @@ _c3c() {
 	case "${prev}" in
 		# Main command
 		c3c)
-			mapfile -t COMPREPLY < <(compgen -W "${commands[*]} -" -- "${cur}")
 			if [[ "${cur}" == -* ]]; then
-				mapfile -t COMPREPLY < <(compgen -W "${options[*]}" -- "${cur}")
+				_complete_options "${cur}" "${options[*]}"
+			else
+				_complete_options "${cur}" "${commands[*]} -"
 			fi
+			return
 			;;
 		project)
-			mapfile -t COMPREPLY < <(compgen -W "view add-target fetch" -- "${cur}")
+			_complete_options "${cur}" "view add-target fetch"
+			return
+			;;
+		build|run|dist|directives|bench|clean-run)
+			project_targets=$(c3c project view --targets 2>/dev/null)
+			_complete_options "${cur}" "${project_targets}"
 			return
 			;;
 		--template) # TODO: this only possible after `init`
-			mapfile -t COMPREPLY < <(compgen -W "exe static-lib dynamic-lib" -- "${cur}")
+			_complete_options "${cur}" "exe static-lib dynamic-lib"
+			# Append the default options as a path is also valid
 			mapfile -t _DEFAULTS < <(compgen -o default -- "${cur}")
 			COMPREPLY+=("${_DEFAULTS[*]}")
+			return
 			;;
 		--target)
 			available_targets=$( \
@@ -165,12 +180,12 @@ _c3c() {
 				| sed "s/^ *\([^ ]*\) *$/\1/" \
 				| tr '\n' ' ' \
 			)
-			mapfile -t COMPREPLY < <(compgen -W "${available_targets}" -- "${cur}")
+			_complete_options "${cur}" "${available_targets}"
 			return
 			;;
 		*)
 			if [[ "${cur}" == -* ]]; then
-				mapfile -t COMPREPLY < <(compgen -W "${options[*]}" -- "${cur}")
+				_complete_options "${cur}" "${options[*]}"
 			fi
 			;;
 	esac
