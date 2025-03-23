@@ -23,8 +23,6 @@ _c3c() {
 		"clean"
 		"run"
 		"dist"
-		"directives"
-		"bench"
 		"clean-run"
 		"compile-run"
 		"compile-only"
@@ -32,7 +30,6 @@ _c3c() {
 		"compile-test"
 		"static-lib"
 		"dynamic-lib"
-		"headers"
 		"vendor-fetch"
 		"project"
 	)
@@ -63,6 +60,7 @@ _c3c() {
 		"-D"
 		"-U"
 		"--about"
+		"--build-env"
 		"--libdir"
 		"--lib"
 		"--validation="
@@ -71,16 +69,16 @@ _c3c() {
 		"--path"
 		"--template"
 		"--symtab"
-		"--max-mem"
 		"--run-once"
+		"--suppress-run"
 		"--trust="
 		"--output-dir"
 		"--build-dir"
 		"--obj-out"
 		"--script-dir"
 		"--llvm-out"
-		"--emit-llvm"
 		"--asm-out"
+		"--emit-llvm"
 		"--emit-asm"
 		"--obj"
 		"--no-obj"
@@ -94,9 +92,15 @@ _c3c() {
 		"--single-module="
 		"--show-backtrace="
 		"--lsp"
-		"--old-test-bench="
 		"-g"
 		"-g0"
+		"--ansi="
+		"--test-filter"
+		"--test-breakpoint"
+		"--test-nosort"
+		"--test-noleak"
+		"--test-nocapture"
+		"--test-quiet"
 		"-l"
 		"-L"
 		"-z"
@@ -116,6 +120,7 @@ _c3c() {
 		"--strip-unused="
 		"--fp-math="
 		"--win64-simd="
+		"--win-debug="
 		"--print-linking"
 		"--benchmarking"
 		"--testing"
@@ -139,7 +144,8 @@ _c3c() {
 		"--macos-sdk-version"
 		"--linux-crt"
 		"--linux-crtbegin"
-		"--vector-conv="
+		"--android-ndk"
+		"--android-api"
 		"--sanitize="
 	)
 
@@ -239,18 +245,18 @@ _c3c() {
 		--win64-simd=*)
 			opts=( "array" "full" )
 			;;
+		--win-debug=*)
+			opts=( "codeview" "dwarf" )
+			;;
 		--wincrt=*)
 			opts=( "none" "static-debug" "static" "dynamic-debug" "dynamic" )
-			;;
-		--vector-conv=*)
-			opts=( "default" "old" )
 			;;
 		--sanitize=*)
 			opts=( "address" "memory" "thread" )
 			;;
 		# Yes or no flags
 		--safe=*|--panic-msg=*|--single-module=*|--show-bactrace=*|  \
-			--old-test-bench=*|--use-stdlib=*|--link-libc=*|--emit-stdlib=*| \
+			--ansi=*|--use-stdlib=*|--link-libc=*|--emit-stdlib=*| \
 			--strip-unused=*)
 			opts=( "yes" "no" )
 			;;
