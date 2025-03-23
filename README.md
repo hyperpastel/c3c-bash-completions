@@ -17,12 +17,7 @@ Flags which take in an argument after a `=` will show up their available values
 after having written out (or completed) the flag up till `=`
 (without space behind) and double "tabbing".
 
-Currently commands like `build` which take in a target (from project.json) have
+Commands like `build` which take in a target (from project.json) have
 smart target-completion using `c3c project view --targets`.
-This is a flag introduced in commit [c326c525be92f89ad437cf6afb03661fb6537b17](https://github.com/c3lang/c3c/commit/c326c525be92f89ad437cf6afb03661fb6537b17).
+This is a flag introduced to c3c in commit [c326c525be](https://github.com/c3lang/c3c/commit/c326c525be92f89ad437cf6afb03661fb6537b17).
 It will be in release 0.6.7, or is now available in `latest`.
-
-> [!important] `c3c project view`
-> This currently only works when inside the root-directory of your C3 project.
-> There is a PR to fix it so it also works in child-directories, which will
-> probably be included in 0.6.7.
