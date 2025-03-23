@@ -1,4 +1,4 @@
-# Bash completions for the C3 compiler (c3c)
+# Bash completions for the [C3 compiler (c3c)](https://github.com/c3lang/c3c)
 These completions can be downloaded and sourced in your `.bashrc`
 or equivalent.
 For example:
