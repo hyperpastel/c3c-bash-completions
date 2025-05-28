@@ -150,6 +150,19 @@ _c3c() {
 		"--sanitize="
 	)
 
+	project_view_filters=(
+		"--authors"
+		"--version"
+		"--language-revision"
+		"--warnings-used"
+		"--c3l-lib-search-paths"
+		"--c3l-lib-dependencies"
+		"--source-paths"
+		"--output-location"
+		"--default-optimization"
+		"--targets"
+	)
+
 	local cur prev
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -171,6 +184,10 @@ _c3c() {
 		build|run|dist|directives|bench|clean-run)
 			project_targets=$(c3c project view --targets 2>/dev/null)
 			_complete_options "${cur}" "${project_targets}"
+			return
+			;;
+		view)
+			_complete_options "${cur}" "${project_view_filters[*]}"
 			return
 			;;
 		--template) # TODO: this only possible after `init`
