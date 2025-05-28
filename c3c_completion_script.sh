@@ -61,6 +61,7 @@ _c3c() {
 		"-U"
 		"--about"
 		"--build-env"
+		"--run-dir"
 		"--libdir"
 		"--lib"
 		"--validation="
