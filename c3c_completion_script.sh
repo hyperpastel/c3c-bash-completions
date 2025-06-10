@@ -155,6 +155,10 @@ _c3c() {
 	)
 
 	project_view_filters=(
+		"-h"
+		"--help"
+		"-v"
+		"-vv"
 		"--authors"
 		"--version"
 		"--language-revision"
