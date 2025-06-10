@@ -181,18 +181,22 @@ _c3c() {
 			if [[ "${cur}" == -* ]]; then
 				_complete_options "${cur}" "${options[*]}"
 			else
-				_complete_options "${cur}" "${commands[*]} -"
+				_complete_options "${cur}" "${commands[*]} -..."
 			fi
-			return
 			;;
 		project)
 			_complete_options "${cur}" "view add-target fetch -h --help"
 			return
 			;;
 		build|run|dist|directives|bench|clean-run)
-			project_targets=$(c3c project view --targets 2>/dev/null)
-			_complete_options "${cur}" "${project_targets}"
-			return
+			if [[ "${cur}" == -* ]]; then
+				_complete_options "${cur}" "${options[*]}"
+			else
+				project_targets=$(c3c project view --targets 2>/dev/null)
+				if ! [[ "${project_targets}" == "" ]]; then
+					_complete_options "${cur}" "${project_targets} -..."
+				fi
+			fi
 			;;
 		view)
 			_complete_options "${cur}" "${project_view_filters[*]}"
