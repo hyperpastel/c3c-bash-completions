@@ -186,7 +186,7 @@ _c3c() {
 			return
 			;;
 		project)
-			_complete_options "${cur}" "view add-target fetch"
+			_complete_options "${cur}" "view add-target fetch -h --help"
 			return
 			;;
 		build|run|dist|directives|bench|clean-run)
