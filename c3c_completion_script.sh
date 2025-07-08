@@ -12,6 +12,15 @@ _complete_options() {
 	mapfile -t COMPREPLY < <(compgen -W "${options}" -- "${already_typed}")
 }
 
+_add_default_completions() {
+	mapfile -t _DEFAULTS < <(compgen -o default -- "${cur}")
+	# Filter empty otherwise there would be empty thing to complete and that
+	# prevents actual completion
+	if [[ "${_DEFAULTS[*]}" != "" ]]; then
+		COMPREPLY+=("${_DEFAULTS[*]}")
+	fi
+}
+
 _c3c() {
 	commands=(
 		"compile"
@@ -207,8 +216,7 @@ _c3c() {
 		--template) # TODO: this only possible after `init`
 			_complete_options "${cur}" "exe static-lib dynamic-lib"
 			# Append the default options as a path is also valid
-			mapfile -t _DEFAULTS < <(compgen -o default -- "${cur}")
-			COMPREPLY+=("${_DEFAULTS[*]}")
+			_add_default_completions
 			return
 			;;
 		--target)
