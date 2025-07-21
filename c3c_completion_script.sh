@@ -1,4 +1,4 @@
-_complete_option_flag() {
+function _complete_option_flag() {
 	already_typed="$1"
 	options="$2"
 	value="${already_typed##*=}"
@@ -6,13 +6,13 @@ _complete_option_flag() {
 	mapfile -t COMPREPLY < <(compgen -P "${flag}" -W "${options}" -- "${value}")
 }
 
-_complete_options() {
+function _complete_options() {
 	already_typed="$1"
 	options="$2"
 	mapfile -t COMPREPLY < <(compgen -W "${options}" -- "${already_typed}")
 }
 
-_add_default_completions() {
+function _add_default_completions() {
 	mapfile -t _DEFAULTS < <(compgen -o default -- "${cur}")
 	# Filter empty otherwise there would be empty thing to complete and that
 	# prevents actual completion
@@ -21,7 +21,7 @@ _add_default_completions() {
 	fi
 }
 
-_c3c() {
+function _c3c_complete() {
 	commands=(
 		"compile"
 		"init"
@@ -306,4 +306,4 @@ _c3c() {
 	fi
 }
 
-complete -o default -F _c3c c3c
+complete -o default -F _c3c_complete c3c
