@@ -1,7 +1,6 @@
 # Bash completions for the [C3 compiler (c3c)](https://github.com/c3lang/c3c)
 These completions can be downloaded and sourced in your `.bashrc`
-or equivalent.
-For example:
+or equivalent. For example:
 ```sh
 # In ~/.bashrc
 source $HOME/completion-scripts/c3c-bash-completions/c3c_completion_script.sh
@@ -19,5 +18,4 @@ after having written out (or completed) the flag up till `=`
 
 Commands like `build` which take in a target (from project.json) have
 smart target-completion using `c3c project view --targets`.
-This is a flag introduced to c3c in commit [c326c525be](https://github.com/c3lang/c3c/commit/c326c525be92f89ad437cf6afb03661fb6537b17).
-It will be in release 0.6.7, or is now available in `latest`.
+This flag is introduced in release `v0.6.7`.
