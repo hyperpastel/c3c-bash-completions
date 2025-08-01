@@ -33,6 +33,7 @@ function c3c_get_platforms {
     }
 
 # TODO Add complex options for things like --cc
+# TODO Separate commands that only work on build commands
 
 c3c_subcommands=(
     "compile"
@@ -151,6 +152,9 @@ c3c_simple_options=(
     "--linux-crtbegin"
     "--android-ndk"
     "--android-api"
+    "--use-old-enums"
+    "--list-asm"
+    "--echo-prefix"
 )
 
 c3c_toggle_options=(
