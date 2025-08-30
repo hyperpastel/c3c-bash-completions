@@ -264,10 +264,6 @@ function _c3c {
 		_c3c_project
 		;;
 
-	view)
-		_c3c_view
-		;;
-
 	init)
 		_c3c_init
 		;;
